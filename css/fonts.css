@@ -1,0 +1,45 @@
+
+/*--------------------------------------------------------------------------------------*\
+| POPPINS
+\*--------------------------------------------------------------------------------------*/
+@font-face {
+    font-family: 'Poppins';
+    src: url('../assets/fonts/Poppins/Poppins-Light.ttf') format('woff2');
+    /* Add additional formats if necessary */
+    font-weight: 300;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../assets/fonts/Poppins/Poppins-Regular.ttf') format('woff2');
+    /* Add additional formats if necessary */
+    font-weight: 400;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../assets/fonts/Poppins/Poppins-Bold.ttf') format('woff2');
+    /* Add additional formats if necessary */
+    font-weight: 600;
+}
+
+
+/*--------------------------------------------------------------------------------------*\
+| PHUDU
+\*--------------------------------------------------------------------------------------*/
+@font-face {
+    font-family: 'Phudu';
+    src: url('../assets/fonts/Phudu/static/Phudu-Regular.ttf') format('woff2');
+    /* Add additional formats if necessary */
+    font-weight: 400;
+}
+@font-face {
+    font-family: 'Phudu';
+    src: url('../assets/fonts/Phudu/static/Phudu-SemiBold.ttf') format('woff2');
+    /* Add additional formats if necessary */
+    font-weight: 600;
+}
+@font-face {
+    font-family: 'Phudu';
+    src: url('../assets/fonts/Phudu/static/Phudu-ExtraBold.ttf') format('woff2');
+    /* Add additional formats if necessary */
+    font-weight: 900;
+}

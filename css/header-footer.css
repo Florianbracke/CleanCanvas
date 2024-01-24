@@ -1,0 +1,72 @@
+header, footer{
+    max-width: var(--max-width);
+    margin: auto;
+    padding: var(--padding-sides);
+    display: flex;
+    justify-content: space-between;
+}
+header{
+    align-items: center;
+}
+header ul, footer ul{
+    list-style: none;
+    padding: 0;
+}
+header .mobile-nav{
+    display: none;
+}
+.logo{
+    width: 200px;
+    max-width: 34%;
+}
+
+footer > div{
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-small);
+}
+
+/*--------------------------------------------------------------------------------------*\
+| QUERIES
+\*--------------------------------------------------------------------------------------*/
+@media screen and (max-width: 1800px) {
+
+}
+@media screen and (max-width: 1350px) {
+
+}
+@media screen and (max-width: 900px) {
+    header, footer{
+        padding-left: 0;
+        padding-right: 0;
+    }
+    footer{
+        flex-direction: column;
+    }
+    header .menu-wrapper{
+        display: none;
+    }
+    header .mobile-nav{
+        display: flex;
+    }
+
+    /* ACTIVE MOBILE */
+    header.active-mobile{
+        position: relative;
+        flex-direction: row;
+    }
+    header .menu-wrapper.active-mobile{
+        display: flex;
+    }
+    header.site-header.active-mobile .menu-wrapper{
+        position: absolute;
+        flex-direction: column;
+        width: 100%;
+        height: fit-content;
+        background-color: rgb(0, 189, 41);
+        z-index: 10;
+        left: 0;
+        top: 100%;
+        padding: var(--padding-sides);
+    }
+}

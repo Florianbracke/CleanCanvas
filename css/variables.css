@@ -1,0 +1,55 @@
+/*--------------------------------------------------------------------------------------*\
+| ROOT VARIABLES
+\*--------------------------------------------------------------------------------------*/
+:root{
+	--spacing-small: 40px;
+    --spacing-mid: 56px;
+	--spacing-medium: 100px;
+	--spacing-big: 140px;
+
+    --max-width: 1400px;
+    --small-width: 900px;
+
+    --zwart:#161916 ;
+    --grijs: #e0e0e0;
+    --wit: #ffffff;
+
+    --padding-sides: calc( 1.5 * var(--spacing-small));
+
+    --border-left-big: 0 0 0 80px;
+    --border-right-big: 0 80px 0 0;
+    --border-left-small: 0 0 0 20px;
+    --border-right-small: 0 20px 0 0;
+
+    --text-font-size: 16px;
+    --line-height: 1.65;
+}
+
+
+/*--------------------------------------------------------------------------------------*\
+| QUERIES
+\*--------------------------------------------------------------------------------------*/
+@media screen and (max-width: 1800px) {
+
+}
+
+@media screen and (max-width: 1350px) {
+    :root{
+        --padding-sides: 60px;
+        --max-width: calc(100% - var(--padding-sides));
+        --small-width: calc(100% - var(--padding-sides));
+    }
+}
+
+@media screen and (max-width: 900px) {
+    :root{
+		--spacing-small: 28px;
+		--spacing-mid: 28px;
+		--spacing-medium: 64px;
+		--spacing-big: 128px;
+		--border-right-big: 0 20px 0 0;
+		--border-left-big: 0 0 0 20px;
+        --font-size: 14px;
+        --line-height: 1.35;
+	}
+}
