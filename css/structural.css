@@ -25,13 +25,13 @@
     color: var(--grijs);
 }
 /* buttons, lists,... */
-.has-wit-color *{
+.has-wit-color *:not(.has-text-color){
     color: var(--wit);
 }
-.has-zwart-color *{
+.has-zwart-color *:not(.has-text-color){
     color: var(--zwart);
 }
-.has-grijs-color *{
+.has-grijs-color *:not(.has-text-color){
     color: var(--grijs);
 }
 
