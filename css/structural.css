@@ -501,6 +501,10 @@ details[open] summary::after{
 .logo{
     max-width: 300px;
 }
+.logo-link{
+    display: flex;
+}
+
 
 /*--------------------------------------------------------------------------------------*\
 | QUERIES
