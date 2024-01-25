@@ -300,6 +300,7 @@ main ul li{
 .wp-block-cover.alignfull .wp-block-cover__inner-container{
     max-width: var(--max-width);
     margin: auto;
+    width: 100%;
 }
 main > .wp-block-cover.alignfull{
     padding-left: 0;
