@@ -232,7 +232,8 @@ function my_function( $allowed_block_types ) {
 		'core/social-link',
 		'core/site-logo',
 		'core/loginout',
-		'core/html'
+		'core/html',
+	    	'core/cover'
     );
 }
 
