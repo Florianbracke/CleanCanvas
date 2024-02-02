@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     /* LIGHTBOX */
     function initLightbox(event) {
 
-        let lightboxImgs = document.querySelectorAll(' .fotoboek img');
+        let lightboxImgs = document.querySelectorAll(' .wp-block-gallery img');
         let body = document.querySelector('body');
 
         console.log(lightboxImgs);
@@ -137,7 +137,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // Use event delegation to handle clicks on dynamically loaded content
   document.body.addEventListener('click', function (event) {
         if(!event.target.classList.contains('lightbox') && !event.target.classList.contains('lightboxImg') && !event.target.classList.contains('arrow')){
-            initLightbox();
+            if (document.querySelector('.wp-block-gallery')){
+                initLightbox();
+            }
         }
   })
 
