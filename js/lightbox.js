@@ -1,124 +1,145 @@
-window.addEventListener('load', () => {
+document.addEventListener('DOMContentLoaded', (event) => {
+
+    //Make sure that lightbox is not initiated more than once
+    let init = false;
 
     /* LIGHTBOX */
-    if( document.querySelector('.wp-block-gallery')){
+    function initLightbox(event) {
 
-        let lightboxImgs = document.querySelectorAll('.wp-block-gallery img');
+        let lightboxImgs = document.querySelectorAll(' .fotoboek img');
         let body = document.querySelector('body');
 
-        for (let i = 0; i < lightboxImgs.length; i++){
-            lightboxImgs[i].addEventListener('click', function(e) {
+        console.log(lightboxImgs);
+        if ( init == false) {
+            for (let i = 0; i < lightboxImgs.length; i++) {
+                init = true;
+                lightboxImgs[i].addEventListener('click', function (e) {
+                    let currentSlide = 0;
+                    console.log('het gebeurt');
+                    body.classList.toggle('lightbox-active');
 
-                let currentSlide = 0;
+                    // Create the lightbox element and add it to the page
+                    let lightbox = document.createElement('div');
+                    lightbox.classList.add('lightbox');
+                    document.body.appendChild(lightbox);
 
-                body.classList.toggle('lightbox-active');
+                    // Create an image element and set its src to the full-size image
+                    var img = document.createElement('img');
+                    img.classList.add('lightboxImg')
+                    img.src = lightboxImgs[i].src;
 
-                // Create the lightbox element and add it to the page
-                let lightbox = document.createElement('div');
-                lightbox.classList.add('lightbox');
-                document.body.appendChild(lightbox);
-
-                // Create an image element and set its src to the full-size image
-                var img = document.createElement('img');
-                img.src = lightboxImgs[i].src;
-
-                // Add the image to the lightbox
-                lightbox.appendChild(img);
-
-                // Create the arrows
-                let left = document.createElement('div');
-                left.classList.add('left', 'arrow');
-                body.appendChild(left);
-                let right = document.createElement('div');
-                right.classList.add('right', 'arrow');
-                body.appendChild(right);
-
-                function goToSlide(n) {
-                    lightboxImgs[currentSlide].classList.remove('active');
-                    currentSlide = (n + lightboxImgs.length) % lightboxImgs.length;
-                    lightboxImgs[currentSlide].classList.add('active');
-
-                    img.remove();
-                    img = document.createElement('img');
-                    img.src =  lightboxImgs[currentSlide].src;
+                    // Add the image to the lightbox
                     lightbox.appendChild(img);
-                }
 
-                // Event Listeners
-                left.addEventListener('click', () => {
-                    goToSlide(currentSlide + 1);
-                })
-                right.addEventListener('click', () => {
-                    goToSlide(currentSlide - 1);
-                })
-                document.onkeydown = (e) => {
-                    if (e.keyCode == '37') {
-                        goToSlide(currentSlide - 1);
+                    // Create the arrows
+                    let left = document.createElement('div');
+                    left.classList.add('left', 'arrow');
+                    body.appendChild(left);
+                    let right = document.createElement('div');
+                    right.classList.add('right', 'arrow');
+                    body.appendChild(right);
+
+                    function goToSlide(n) {
+                        lightboxImgs[currentSlide].classList.remove('active');
+                        currentSlide = (n + lightboxImgs.length) % lightboxImgs.length;
+                        lightboxImgs[currentSlide].classList.add('active');
+
+                        img.remove();
+                        img = document.createElement('img');
+                        img.src = lightboxImgs[currentSlide].src;
+                        lightbox.appendChild(img);
                     }
-                    if (e.keyCode == '39') {
+
+                    // Event Listeners
+                    left.addEventListener('click', () => {
                         goToSlide(currentSlide + 1);
+                    })
+                    right.addEventListener('click', () => {
+                        goToSlide(currentSlide - 1);
+                    })
+                    window.addEventListener('wheel', function(event){
+                        if (event.deltaY < 0) {
+                            goToSlide(currentSlide + 1);;
+                        } else if (event.deltaY > 0) {
+                            goToSlide(currentSlide - 1);
+                        }
+                    });
+                    document.onkeydown = (e) => {
+                        if (e.keyCode == '37') {
+                            goToSlide(currentSlide - 1);
+                        }
+                        if (e.keyCode == '39') {
+                            goToSlide(currentSlide + 1);
+                        }
+                        if (e.keyCode == '27' || e.keyCode == '46' || e.keyCode == 'Escape' || e.keyCode == 'Delete') {
+                            lightbox.remove();
+                            body.classList.remove('lightbox-active');
+                            left.remove();
+                            right.remove();
+                        }
                     }
-                    if (e.keyCode == '27' || e.keyCode == '46') {
+
+                    //mobile swiping
+                    document.addEventListener('touchstart', handleTouchStart, false);
+                    document.addEventListener('touchmove', handleTouchMove, false);
+
+                    var xDown = null;
+                    var yDown = null;
+
+                    function getTouches(evt) {
+                        return evt.touches ||
+                            evt.originalEvent.touches;
+                    }
+
+                    function handleTouchStart(evt) {
+                        const firstTouch = getTouches(evt)[0];
+                        xDown = firstTouch.clientX;
+                        yDown = firstTouch.clientY;
+                    };
+
+                    function handleTouchMove(evt) {
+                        if (!xDown || !yDown) {
+                            return;
+                        }
+
+                        var xUp = evt.touches[0].clientX;
+                        var yUp = evt.touches[0].clientY;
+
+                        var xDiff = xDown - xUp;
+                        var yDiff = yDown - yUp;
+
+                        if (Math.abs(xDiff) > Math.abs(yDiff)) {
+                            /*most significant*/
+                            if (xDiff > 10) {
+                                goToSlide(currentSlide + 1);
+                            } else {
+                                goToSlide(currentSlide - 1);
+                            }
+                        }
+                        /* reset values */
+                        xDown = null;
+                        yDown = null;
+                    };
+
+                    // close lightbox and arrows when clicked
+                    lightbox.addEventListener('click', function () {
                         lightbox.remove();
                         body.classList.remove('lightbox-active');
                         left.remove();
                         right.remove();
-                    }
+                    });
 
-                }
-                //mobile swiping
-                document.addEventListener('touchstart', handleTouchStart, false);
-                document.addEventListener('touchmove', handleTouchMove, false);
-
-                var xDown = null;
-                var yDown = null;
-
-                function getTouches(evt) {
-                  return evt.touches ||             // browser API
-                         evt.originalEvent.touches; // jQuery
-                }
-
-                function handleTouchStart(evt) {
-                    const firstTouch = getTouches(evt)[0];
-                    xDown = firstTouch.clientX;
-                    yDown = firstTouch.clientY;
-                };
-
-                function handleTouchMove(evt) {
-                    if ( ! xDown || ! yDown ) {
-                        return;
-                    }
-
-                    var xUp = evt.touches[0].clientX;
-                    var yUp = evt.touches[0].clientY;
-
-                    var xDiff = xDown - xUp;
-                    var yDiff = yDown - yUp;
-
-                    if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
-                        if ( xDiff > 10 ) {
-                            goToSlide(currentSlide + 1);
-                        } else {
-                            goToSlide(currentSlide - 1);
-                        }
-                    }
-                    /* reset values */
-                    xDown = null;
-                    yDown = null;
-                };
-
-                 // close lightbox and arrows when clicked
-                lightbox.addEventListener('click', function() {
-                    lightbox.remove();
-                    body.classList.remove('lightbox-active');
-                    left.remove();
-                    right.remove();
                 });
-
-            });
+            }
         }
     }
 
+    // Use event delegation to handle clicks on dynamically loaded content
+  document.body.addEventListener('click', function (event) {
+        if(!event.target.classList.contains('lightbox') && !event.target.classList.contains('lightboxImg') && !event.target.classList.contains('arrow')){
+            initLightbox();
+        }
+  })
 
     let lightboxStyles = `
         body.lightbox-active{
@@ -196,4 +217,4 @@ window.addEventListener('load', () => {
     styleSheetLightbox.innerText = lightboxStyles;
     document.head.appendChild(styleSheetLightbox);
 
-})
+});
