@@ -1,222 +1,87 @@
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', () => {
+    
+    const albums = document.querySelectorAll('.wp-block-gallery');
 
-    //Make sure that lightbox is not initiated more than once
-    let init = false;
+    albums.forEach(album => {
+        
+        const lightboxImgs = album.querySelectorAll('img');
+        
+        /* KLIK OP IMAGE */
+        lightboxImgs.forEach(img => {
+            img.addEventListener('click', () => {
+                const body = document.querySelector('body');
+                body.classList.toggle('lightbox-active');
 
-    /* LIGHTBOX */
-    function initLightbox(event) {
+                const lightbox = document.createElement('div');
+                lightbox.className = 'lightbox';
+                document.body.appendChild(lightbox);
 
-        let lightboxImgs = document.querySelectorAll(' .wp-block-gallery img');
-        let body = document.querySelector('body');
+                const lightboxImg = document.createElement('img');
+                lightboxImg.className = 'lightboxImg';
+                lightboxImg.src = img.src;
+                lightbox.appendChild(lightboxImg);
 
-        console.log(lightboxImgs);
-        if ( init == false) {
-            for (let i = 0; i < lightboxImgs.length; i++) {
-                init = true;
-                lightboxImgs[i].addEventListener('click', function (e) {
-                    let currentSlide = 0;
-                    console.log('het gebeurt');
-                    body.classList.toggle('lightbox-active');
+                function goToSlide(n) {
+                    currentSlide = (n + lightboxImgs.length) % lightboxImgs.length;
+                    lightboxImg.src = lightboxImgs[currentSlide].src;
+                }
 
-                    // Create the lightbox element and add it to the page
-                    let lightbox = document.createElement('div');
-                    lightbox.classList.add('lightbox');
-                    document.body.appendChild(lightbox);
+                let currentSlide = 0;
+                const left = createArrow('left');
+                const right = createArrow('right');
 
-                    // Create an image element and set its src to the full-size image
-                    var img = document.createElement('img');
-                    img.classList.add('lightboxImg')
-                    img.src = lightboxImgs[i].src;
 
-                    // Add the image to the lightbox
-                    lightbox.appendChild(img);
+                /* NAVIGATIE */
+                left.addEventListener('click', () => goToSlide(currentSlide - 1));
+                right.addEventListener('click', () => goToSlide(currentSlide + 1));
+                window.addEventListener('wheel', event => event.deltaY < 0 ? goToSlide(currentSlide - 1) : goToSlide(currentSlide + 1));
 
-                    // Create the arrows
-                    let left = document.createElement('div');
-                    left.classList.add('left', 'arrow');
-                    body.appendChild(left);
-                    let right = document.createElement('div');
-                    right.classList.add('right', 'arrow');
-                    body.appendChild(right);
-
-                    function goToSlide(n) {
-                        lightboxImgs[currentSlide].classList.remove('active');
-                        currentSlide = (n + lightboxImgs.length) % lightboxImgs.length;
-                        lightboxImgs[currentSlide].classList.add('active');
-
-                        img.remove();
-                        img = document.createElement('img');
-                        img.src = lightboxImgs[currentSlide].src;
-                        lightbox.appendChild(img);
-                    }
-
-                    // Event Listeners
-                    left.addEventListener('click', () => {
-                        goToSlide(currentSlide + 1);
-                    })
-                    right.addEventListener('click', () => {
-                        goToSlide(currentSlide - 1);
-                    })
-                    window.addEventListener('wheel', function(event){
-                        if (event.deltaY < 0) {
-                            goToSlide(currentSlide + 1);;
-                        } else if (event.deltaY > 0) {
-                            goToSlide(currentSlide - 1);
-                        }
-                    });
-                    document.onkeydown = (e) => {
-                        if (e.keyCode == '37') {
-                            goToSlide(currentSlide - 1);
-                        }
-                        if (e.keyCode == '39') {
-                            goToSlide(currentSlide + 1);
-                        }
-                        if (e.keyCode == '27' || e.keyCode == '46' || e.keyCode == 'Escape' || e.keyCode == 'Delete') {
-                            lightbox.remove();
-                            body.classList.remove('lightbox-active');
-                            left.remove();
-                            right.remove();
-                        }
-                    }
-
-                    //mobile swiping
-                    document.addEventListener('touchstart', handleTouchStart, false);
-                    document.addEventListener('touchmove', handleTouchMove, false);
-
-                    var xDown = null;
-                    var yDown = null;
-
-                    function getTouches(evt) {
-                        return evt.touches ||
-                            evt.originalEvent.touches;
-                    }
-
-                    function handleTouchStart(evt) {
-                        const firstTouch = getTouches(evt)[0];
-                        xDown = firstTouch.clientX;
-                        yDown = firstTouch.clientY;
-                    };
-
-                    function handleTouchMove(evt) {
-                        if (!xDown || !yDown) {
-                            return;
-                        }
-
-                        var xUp = evt.touches[0].clientX;
-                        var yUp = evt.touches[0].clientY;
-
-                        var xDiff = xDown - xUp;
-                        var yDiff = yDown - yUp;
-
-                        if (Math.abs(xDiff) > Math.abs(yDiff)) {
-                            /*most significant*/
-                            if (xDiff > 10) {
-                                goToSlide(currentSlide + 1);
-                            } else {
-                                goToSlide(currentSlide - 1);
-                            }
-                        }
-                        /* reset values */
-                        xDown = null;
-                        yDown = null;
-                    };
-
-                    // close lightbox and arrows when clicked
-                    lightbox.addEventListener('click', function () {
+                /* SLUITEN EVENT */
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
+                    if (e.key === 'ArrowRight') goToSlide(currentSlide + 1);
+                    if (e.key === 'Escape') {
                         lightbox.remove();
                         body.classList.remove('lightbox-active');
                         left.remove();
                         right.remove();
-                    });
-
+                    }
                 });
-            }
-        }
-    }
-
-    // Use event delegation to handle clicks on dynamically loaded content
-  document.body.addEventListener('click', function (event) {
-        if(!event.target.classList.contains('lightbox') && !event.target.classList.contains('lightboxImg') && !event.target.classList.contains('arrow')){
-            if (document.querySelector('.wp-block-gallery')){
-                initLightbox();
-            }
-        }
-  })
-
-    let lightboxStyles = `
-        body.lightbox-active{
-            overflow: hidden;
-        }
-        .arrow{
-            cursor: pointer;
-            padding: 50px;
-            z-index: 10000;
-            position: fixed;
-            top: 50%;
-            left: 5%;
-            width: 25px;
-            height: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.4s;
-        }
-        .arrow::before{
-            content: '<';
-            width: 30px;
-            height: 30px;
-            color: white;
-            position: absolute;
-            top: calc( 50% - 15px);
-            left: calc( 50% - 15px);
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .arrow.right{
-            right: 5%;
-            left: unset;
-        }
-        .arrow.right::before{
-            content: '>';
-        }
-        .lightbox{
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #000000eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .lightbox img{
-            max-width: 100%;
-            max-height: 100%;
-        }
-        @media screen and (max-width: 768px){
-
-            .lightbox img{
-                object-fit: cover;
-                max-width: 100vw;
-                max-height: 100vh;
-            }
-            .lightbox{
-                align-items: center;
-                padding: 20px;
-                box-sizing: border-box;
-            }
-            .arrow{
-                display: none;
-            }
-        }
+                /* SLUITEN EVENT */
+                document.addEventListener('click', (e) => {
+                    if (e.target === lightbox) {
+                        lightbox.remove();
+                        body.classList.remove('lightbox-active');
+                        left.remove();
+                        right.remove();
+                    }
+                });
+            });
+        });
+    });
+    
+    /* STYLES */
+    const lightboxStyles = `
+        body.lightbox-active { overflow: hidden; }
+        .arrow { cursor: pointer; padding: 50px; z-index: 10000; position: fixed; top: 50%; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; transition: 0.4s; }
+        .arrow::before { content: '<'; width: 30px; height: 30px; color: white; position: absolute; top: calc(50% - 15px); left: calc(50% - 15px); font-size: 20px; display: flex; align-items: center; justify-content: center; }
+        .arrow.right { right: 5%; left: unset; }
+        .arrow.right::before { content: '>'; }
+        .lightbox { position: fixed; top: 0; z-index: 1000; left: 0; width: 100vw; height: 100vh; background: #000000eb; display: flex; align-items: center; justify-content: center; }
+        .lightbox img { max-width: 100%; max-height: 100%; }
+        @media screen and (max-width: 768px) { .lightbox img { object-fit: cover; max-width: 100vw; max-height: 100vh; } .lightbox { align-items: center; padding: 20px; box-sizing: border-box; } .arrow { display: none; } }
     `;
 
-    let styleSheetLightbox = document.createElement("style")
-    styleSheetLightbox.innerText = lightboxStyles;
+    const styleSheetLightbox = document.createElement("style");
+    styleSheetLightbox.textContent = lightboxStyles;
     document.head.appendChild(styleSheetLightbox);
 
+     /* NAVIGATIE PIJLTJES */
+    function createArrow(direction) {
+        const arrow = document.createElement('div');
+        arrow.className = `${direction} arrow`;
+        arrow.innerHTML = direction === 'left' ? '&#10094;' : '&#10095;';
+        document.body.appendChild(arrow);
+        return arrow;
+    }
 });
