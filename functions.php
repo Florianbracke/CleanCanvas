@@ -354,6 +354,16 @@ add_action( 'admin_head', 'override_admin_bar_css' );
 add_action( 'wp_head', 'override_admin_bar_css' );
 
 
+/*--------------------------------------------------------------------------------------*\
+|  SET PERMALINKS TO POSTNAME
+\*--------------------------------------------------------------------------------------*/
+function set_custom_permalinks() {
+    global $wp_rewrite;
+    $wp_rewrite->set_permalink_structure( '/%category%/%postname%/' );
+    $wp_rewrite->flush_rules(); // Regelcache wissen om de nieuwe permalinkstructuur toe te passen
+}
+add_action( 'init', 'set_custom_permalinks' );
+
 
 // *** TODO ***
 // block cover background customizable
