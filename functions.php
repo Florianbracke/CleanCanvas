@@ -212,31 +212,34 @@ add_action('login_head', 'my_custom_login_logo');
 /*--------------------------------------------------------------------------------------*\
 |  REGISTERED / ALLOWED BLOCKS
 \*--------------------------------------------------------------------------------------*/
-add_filter( 'allowed_block_types', 'my_function' );
-function my_function( $allowed_block_types ) {
-    return array(
-		'core/paragraph',
-		'core/heading',
-		'core/list',
-		'core/list-item',
-		'acf/faq',
-		'core/image',
-		'core/gallery',
-		'core/video',
-		'core/buttons',
-		'core/button',
-		'core/columns',
-		'core/column',
-		'core/shortcode',
-		'core/social-links',
-		'core/social-link',
-		'core/site-logo',
-		'core/loginout',
-		'core/html',
-	    	'core/cover'
-    );
-}
+function wpdocs_allowed_block_types ( $block_editor_context, $editor_context ) {
+	if ( ! empty( $editor_context->post ) ) {
+		return array(
+			'core/paragraph',
+			'core/heading',
+			'core/list',
+			'core/list-item',
+			'acf/faq',
+			'core/image',
+			'core/gallery',
+			'core/video',
+			'core/buttons',
+			'core/button',
+			'core/columns',
+			'core/column',
+			'core/shortcode',
+			'core/social-links',
+			'core/social-link',
+			'core/site-logo',
+			'core/loginout',
+			'core/html',
+			'core/cover'
+		);
+	}
 
+	return $block_editor_context;
+}
+add_filter( 'allowed_block_types_all', 'wpdocs_allowed_block_types', 10, 2 );
 
 
 
